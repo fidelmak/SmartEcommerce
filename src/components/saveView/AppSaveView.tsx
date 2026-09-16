@@ -1,6 +1,7 @@
 import {
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextStyle,
@@ -28,6 +29,8 @@ export default AppSaveView;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    justifyContent: "center",
+
     backgroundColor: AppColors.white,
     paddingTop: IS_ANDROID ? 25 : 0,
   },

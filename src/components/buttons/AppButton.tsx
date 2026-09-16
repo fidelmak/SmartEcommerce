@@ -1,10 +1,26 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 import React from "react";
 import { vs, s } from "react-native-size-matters";
 import AppText from "../text/AppText";
 import { AppColors } from "../../styles/AppColors";
 
-const AppButton = ({
+interface AppButtonProps {
+  onPress: () => void;
+  title: string;
+  style: ViewStyle;
+  backgroundColor?: string;
+  textColor?: string;
+  styleTitle: TextStyle;
+  disabled: boolean;
+}
+const AppButton: React.FC<AppButtonProps> = ({
   onPress,
   title,
   style,

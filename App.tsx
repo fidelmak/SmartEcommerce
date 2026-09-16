@@ -4,33 +4,15 @@ import AppText from "./src/components/text/AppText";
 import AppSaveView from "./src/components/saveView/AppSaveView";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import AppButton from "./src/components/buttons/AppButton";
+import { vs } from "react-native-size-matters";
+import AppTextInput from "./src/components/inputs/AppTextInput";
+import SignInScreen from "./src/screens/auth/SignInScreen";
 
 export default function App() {
   return (
     <>
       <FlashMessage position={"bottom"} />
-      <AppSaveView>
-        <View style={styles.container}>
-          <AppText style={{ alignSelf: "center" }} variant="bold">
-            New Development
-          </AppText>
-          <AppText
-            onPress={() => {
-              showMessage({
-                message: "Started Successfully",
-                //type: "default",
-                backgroundColor: "purple", // background color
-                color: "#fff",
-              });
-            }}
-            style={{ alignSelf: "center", marginTop: 12 }}
-            variant="medium"
-          >
-            Start
-          </AppText>
-          <AppButton disabled onPress={() => {}} title="Continue" />
-        </View>
-      </AppSaveView>
+      <SignInScreen />
     </>
   );
 }
@@ -40,5 +22,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     textAlign: "center",
+    alignItems: "center",
+    paddingHorizontal: 25,
   },
 });
