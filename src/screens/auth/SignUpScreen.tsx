@@ -11,9 +11,10 @@ import { IMAGES } from "../../constants/image-paths";
 import { AppColors } from "../../styles/AppColors";
 import { useNavigation } from "@react-navigation/native";
 
-const SignInScreen = () => {
+const SignUpScreen = () => {
   const [email, setEmail] = useState("");
-
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigation();
 
@@ -31,10 +32,17 @@ const SignInScreen = () => {
         <View style={styles.container}>
           <Image source={IMAGES.appLogo} style={styles.logo} />
           <AppText style={{ alignSelf: "center" }} variant="bold">
-            Login to Account
+            Create Account
           </AppText>
           <View style={{ height: vs(20) }}></View>
-
+          <AppTextInput
+            values={name}
+            onChangeText={setName}
+            placeholder={"name"}
+            secureTextEntry={false}
+            keyboardType={"default"}
+            style={{}}
+          />
           <AppTextInput
             values={email}
             onChangeText={setEmail}
@@ -43,7 +51,14 @@ const SignInScreen = () => {
             keyboardType={"email-address"}
             style={{}}
           />
-
+          <AppTextInput
+            values={phone}
+            onChangeText={setPhone}
+            placeholder={"phone"}
+            secureTextEntry={false}
+            keyboardType={"numeric"}
+            style={{}}
+          />
           <AppTextInput
             values={password}
             onChangeText={setPassword}
@@ -63,12 +78,12 @@ const SignInScreen = () => {
           <View
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
-            <AppText>New here?</AppText>
+            <AppText>Already have account?</AppText>
             <AppText
               style={{ color: AppColors.blue }}
-              onPress={() => nav.navigate("SignUpScreen")}
+              onPress={() => nav.navigate("SignInScreen")}
             >
-              create account
+              login
             </AppText>
           </View>
         </View>
@@ -77,7 +92,7 @@ const SignInScreen = () => {
   );
 };
 
-export default SignInScreen;
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -7,12 +7,17 @@ import AppButton from "./src/components/buttons/AppButton";
 import { vs } from "react-native-size-matters";
 import AppTextInput from "./src/components/inputs/AppTextInput";
 import SignInScreen from "./src/screens/auth/SignInScreen";
+import AuthStack from "./src/navigations/AuthStack";
+import { NavigationContainer } from "@react-navigation/native";
+import MainStackScreen from "./src/navigations/MainAppStack";
 
 export default function App() {
   return (
     <>
-      <FlashMessage position={"bottom"} />
-      <SignInScreen />
+      <NavigationContainer>
+        <FlashMessage position={"bottom"} />
+        <MainStackScreen />
+      </NavigationContainer>
     </>
   );
 }
