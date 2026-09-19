@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import AppSaveView from "../../components/saveView/AppSaveView";
+import HomeHeader from "../../components/header/HomeHeader";
 
 const CartScreen = () => {
   return (
-    <View>
-      <Text>CartScreen</Text>
-    </View>
+    <AppSaveView>
+      <HomeHeader />
+    </AppSaveView>
   );
 };
 

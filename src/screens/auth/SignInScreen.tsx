@@ -54,7 +54,7 @@ const SignInScreen = () => {
           />
           <AppButton
             disabled={false}
-            onPress={() => showMess("Redirecting to Dashboard")}
+            onPress={() => nav.navigate("MainAppBottomTab")}
             title="Continue"
             style={{}}
             styleTitle={{}}

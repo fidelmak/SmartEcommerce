@@ -10,4 +10,6 @@ export const AppColors = {
   darkGrey: "#a9a9a9",
   borderColor: "#ccc",
   blue: "#0099FFF6",
+  green:"green",
+  grey:"grey"
 };

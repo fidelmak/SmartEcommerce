@@ -11,6 +11,8 @@ import {
 import React, { FC } from "react";
 import { AppColors } from "../../styles/AppColors";
 import { IS_ANDROID } from "../../constants/constant";
+import { sharedHorizontalPadding } from "../../constants/SharedStyles";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 interface AppSaveViewProps {
   children: React.ReactNode;
@@ -18,9 +20,11 @@ interface AppSaveViewProps {
 }
 const AppSaveView: FC<AppSaveViewProps> = ({ children, style }) => {
   return (
-    <SafeAreaView style={[styles.safeArea, style]}>
-      <View style={styles.container}>{children}</View>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={[styles.safeArea, style]}>
+        <View style={styles.container}>{children}</View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
