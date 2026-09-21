@@ -22,9 +22,10 @@ const HomeScreen = () => {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <ProductCard
-              price={item.price}
-              title={item.title}
-              imageUrl={item.imageURL}
+              {...item}
+              //  price={item.price}
+              // title={item.title}
+              // imageUrl={item.imageURL}
               onPress={function (): void {
                 throw new Error("Function not implemented.");
               }}

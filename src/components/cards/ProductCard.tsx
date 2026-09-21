@@ -9,14 +9,14 @@ import { Ionicons } from "@expo/vector-icons";
 interface productCardProps {
   price: number;
   title: string;
-  imageUrl: string;
+  imageURL: string;
   onPress: () => void;
 }
 
 const ProductCard: React.FC<productCardProps> = ({
   price,
   title,
-  imageUrl,
+  imageURL,
   onPress,
 }) => {
   return (
@@ -32,7 +32,7 @@ const ProductCard: React.FC<productCardProps> = ({
         <Image
           style={styles.image}
           source={{
-            uri: imageUrl,
+            uri: imageURL,
           }}
         />
       </View>
@@ -48,18 +48,6 @@ const ProductCard: React.FC<productCardProps> = ({
             }}
           >
             £{price}
-          </AppText>
-          <AppText
-            variant="bold"
-            style={{
-              color: AppColors.darkGrey,
-              fontSize: 18,
-              textShadowColor: AppColors.darkGrey,
-              textShadowOffset: { width: 0, height: 2 },
-              textShadowRadius: 10,
-            }}
-          >
-            20% OFF
           </AppText>
         </View>
       </View>
@@ -103,7 +91,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   container: {
-    height: vs(210),
     width: s(160),
     backgroundColor: AppColors.white,
     borderRadius: s(18),

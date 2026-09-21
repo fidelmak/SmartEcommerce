@@ -11,5 +11,6 @@ export const AppColors = {
   borderColor: "#ccc",
   blue: "#0099FFF6",
   green:"green",
-  grey:"grey"
+  grey:"grey",
+  red:"red"
 };
