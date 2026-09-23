@@ -25,13 +25,6 @@ const CartItems: React.FC<cartItemsProps> = ({
   onDecreasePress,
   qty,
 }) => {
-  const tempContent = {
-    id: 3,
-    price: 1799,
-    title: "Mac Book Pro 15",
-    imageURL:
-      "https://image.made-in-china.com/2f0j00CTdkRwQaYmzE/2023-Latest-Original-Good-Quality-Laptop-for-Book-15-2023-Laptop.webp",
-  };
   return (
     <View style={styles.container}>
       {/* image container */}

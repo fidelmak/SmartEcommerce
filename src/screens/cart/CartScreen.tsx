@@ -6,8 +6,11 @@ import EmptyCart from "./EmptyCart";
 import CartItems from "../../components/carts/CartItems";
 import TotalViews from "../../components/carts/TotalViews";
 import { products } from "../../data/products";
+import { useNavigation } from "@react-navigation/native";
+import CheckoutScreen from "./CheckoutScreen";
 
 const CartScreen = () => {
+  const navigation = useNavigation();
   return (
     <AppSaveView>
       <HomeHeader />
@@ -23,9 +26,7 @@ const CartScreen = () => {
         shippingFee={""}
         tax={""}
         orderTotal={""}
-        onCheckoutPress={function (): void {
-          throw new Error("Function not implemented.");
-        }}
+        onCheckoutPress={() => navigation.navigate("CheckoutScreen")}
       />
     </AppSaveView>
   );

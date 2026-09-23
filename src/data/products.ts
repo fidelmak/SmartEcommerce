@@ -47,4 +47,11 @@ export const products = [
     title: "Logitech Camera ",
     imageURL: "https://resource.logitech.com/content/dam/logitech/en/products/webcams/c310/gallery/c310-gallery-1.png",
   },
+  {
+    id: 8,
+    price: 59,
+    title: "Logitech Mouse",
+    imageURL:
+      "https://media.ldlc.com/r374/ld/products/00/05/88/25/LD0005882564_1.jpg",
+  },
 ];
