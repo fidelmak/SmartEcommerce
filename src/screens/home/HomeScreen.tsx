@@ -9,9 +9,12 @@ import { sharedHorizontalPadding } from "../../constants/SharedStyles";
 import { products } from "../../data/products";
 import AppTextInput from "../../components/inputs/AppTextInput";
 import { s, vs } from "react-native-size-matters";
+import { useDispatch } from "react-redux";
+import { addItemToCart } from "../../store/reducer/cartSlice";
 
 const HomeScreen = () => {
   const [search, setSearch] = useState();
+  const dispatch = useDispatch();
   return (
     <AppSaveView>
       <HomeHeader />
@@ -31,7 +34,7 @@ const HomeScreen = () => {
         />
       </View>
 
-      <View style={{ alignItems: "center" }}>
+      <View style={{ flex: 1, alignItems: "center" }}>
         <FlatList
           columnWrapperStyle={{ gap: 10 }}
           contentContainerStyle={{ gap: 10, paddingBottom: vs(120) }}
@@ -45,8 +48,8 @@ const HomeScreen = () => {
               //  price={item.price}
               // title={item.title}
               // imageUrl={item.imageURL}
-              onPress={function (): void {
-                throw new Error("Function not implemented.");
+              onPress={() => {
+                dispatch(addItemToCart(item));
               }}
             />
           )}

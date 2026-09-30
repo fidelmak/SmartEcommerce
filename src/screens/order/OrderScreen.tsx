@@ -1,9 +1,8 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, FlatList } from "react-native";
 import React from "react";
 import AppSaveView from "../../components/saveView/AppSaveView";
 import { sharedHorizontalPadding } from "../../constants/SharedStyles";
 import OrderCard from "../../components/order/OrderCard";
-import { ScrollView } from "react-native-gesture-handler";
 
 const OrderScreen = () => {
   const orders = [
@@ -89,26 +88,29 @@ const OrderScreen = () => {
     },
   ];
 
+  const renderItem = ({ item }) => (
+    <OrderCard
+      trackingId={item.trackingId}
+      orderStatus={item.orderStatus}
+      address={item.address}
+      orderDate={item.orderDate}
+      color={item.color}
+      color2={item.color2}
+      onPress={() => {
+        console.log("Order pressed:", item.trackingId);
+      }}
+    />
+  );
+
   return (
     <AppSaveView>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.container}>
-          {orders.map((order) => (
-            <OrderCard
-              key={order.trackingId}
-              trackingId={order.trackingId}
-              orderStatus={order.orderStatus}
-              address={order.address}
-              orderDate={order.orderDate}
-              color={order.color}
-              color2={order.color2}
-              onPress={() => {
-                console.log("Order pressed:", order.trackingId);
-              }}
-            />
-          ))}
-        </View>
-      </ScrollView>
+      <FlatList
+        data={orders}
+        keyExtractor={(item) => item.trackingId}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.container}
+      />
     </AppSaveView>
   );
 };

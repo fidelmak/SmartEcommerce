@@ -11,6 +11,8 @@ import AuthStack from "./src/navigations/AuthStack";
 import { NavigationContainer } from "@react-navigation/native";
 import MainStackScreen from "./src/navigations/MainAppStack";
 import { useFonts } from "expo-font";
+import { Provider } from "react-redux";
+import { store } from "./src/store/store";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,10 +24,12 @@ export default function App() {
   }
   return (
     <>
-      <NavigationContainer>
-        <FlashMessage position={"bottom"} />
-        <MainStackScreen />
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <FlashMessage position={"bottom"} />
+          <MainStackScreen />
+        </NavigationContainer>
+      </Provider>
     </>
   );
 }
