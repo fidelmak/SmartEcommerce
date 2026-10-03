@@ -10,13 +10,48 @@ import { sharedHorizontalPadding } from "../../constants/SharedStyles";
 import { IMAGES } from "../../constants/image-paths";
 import { AppColors } from "../../styles/AppColors";
 import { useNavigation } from "@react-navigation/native";
+import * as yup from "yup";
+import AppTextInputController from "../../components/inputs/AppTextInputController";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+// schema
+const schema = yup
+  .object({
+    email: yup
+      .string()
+      .lowercase()
+      .required("Email is required")
+      .email("Invalid email address"),
+
+    password: yup
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(32, "Password cannot exceed 32 characters")
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .matches(/[0-9]/, "Password must contain at least one number")
+      .matches(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one special character",
+      )
+      .required("Password is required"),
+  })
+  .required();
+
+type FormData = yup.InferType<typeof schema>;
+//
 
 const SignInScreen = () => {
-  const [email, setEmail] = useState("");
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-  const [password, setPassword] = useState("");
   const nav = useNavigation();
-
+  const login = (formData: FormData, link: string) => {
+    nav.navigate(link);
+    console.log(formData);
+  };
   function showMess(message: string) {
     return showMessage({
       message: message,
@@ -35,26 +70,26 @@ const SignInScreen = () => {
           </AppText>
           <View style={{ height: vs(20) }}></View>
 
-          <AppTextInput
-            values={email}
-            onChangeText={setEmail}
-            placeholder={"email"}
+          <AppTextInputController
+            control={control}
+            name={"email"}
+            placeHolder={"email"}
             secureTextEntry={false}
-            keyboardType={"email-address"}
-            style={{}}
           />
 
-          <AppTextInput
-            values={password}
-            onChangeText={setPassword}
-            placeholder={"password"}
+          <AppTextInputController
+            control={control}
+            name={"password"}
+            placeHolder={"password"}
             secureTextEntry={true}
-            keyboardType={"default"}
-            style={{}}
           />
+
           <AppButton
             disabled={false}
-            onPress={() => nav.navigate("MainAppBottomTab")}
+            onPress={
+              handleSubmit((formData) => login(formData, "MainAppBottomTab"))
+              //
+            }
             title="Continue"
             style={{}}
             styleTitle={{}}

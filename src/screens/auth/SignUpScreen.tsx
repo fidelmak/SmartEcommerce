@@ -11,12 +11,54 @@ import { IMAGES } from "../../constants/image-paths";
 import { AppColors } from "../../styles/AppColors";
 import { useNavigation } from "@react-navigation/native";
 
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import AppTextInputController from "../../components/inputs/AppTextInputController";
+
+// schema
+const schema = yup
+  .object({
+    name: yup.string().lowercase().required("Name is required"),
+    phone: yup.string().lowercase().required("Phone is required"),
+    email: yup
+      .string()
+      .lowercase()
+      .required("Email is required")
+      .email("Invalid email address"),
+
+    password: yup
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(32, "Password cannot exceed 32 characters")
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .matches(/[0-9]/, "Password must contain at least one number")
+      .matches(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one special character",
+      )
+      .required("Password is required"),
+  })
+  .required();
+
+//
+
 const SignUpScreen = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigation();
+
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const register = (formData: FormData, link: string) => {
+    nav.navigate(link);
+    console.log(formData);
+  };
 
   function showMess(message: string) {
     return showMessage({
@@ -35,41 +77,38 @@ const SignUpScreen = () => {
             Create Account
           </AppText>
           <View style={{ height: vs(20) }}></View>
-          <AppTextInput
-            values={name}
-            onChangeText={setName}
-            placeholder={"name"}
+          <AppTextInputController
+            control={control}
+            name={"name"}
+            placeHolder={"name"}
             secureTextEntry={false}
-            keyboardType={"default"}
-            style={{}}
           />
-          <AppTextInput
-            values={email}
-            onChangeText={setEmail}
-            placeholder={"email"}
+
+          <AppTextInputController
+            control={control}
+            name={"email"}
+            placeHolder={"email"}
             secureTextEntry={false}
-            keyboardType={"email-address"}
-            style={{}}
           />
-          <AppTextInput
-            values={phone}
-            onChangeText={setPhone}
-            placeholder={"phone"}
+          <AppTextInputController
+            control={control}
+            name={"phone"}
+            placeHolder={"phone"}
+            keyboardType="numeric"
             secureTextEntry={false}
-            keyboardType={"numeric"}
-            style={{}}
           />
-          <AppTextInput
-            values={password}
-            onChangeText={setPassword}
-            placeholder={"password"}
+          <AppTextInputController
+            control={control}
+            name={"password"}
+            placeHolder={"password"}
             secureTextEntry={true}
-            keyboardType={"default"}
-            style={{}}
           />
+
           <AppButton
             disabled={false}
-            onPress={() => showMess("Redirecting to Dashboard")}
+            onPress={handleSubmit((formData) =>
+              register(formData, "MainAppBottomTab"),
+            )}
             title="Continue"
             style={{}}
             styleTitle={{}}
