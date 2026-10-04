@@ -14,6 +14,8 @@ import * as yup from "yup";
 import AppTextInputController from "../../components/inputs/AppTextInputController";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { auth } from "../../config/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 // schema
 const schema = yup
@@ -26,15 +28,15 @@ const schema = yup
 
     password: yup
       .string()
-      .min(8, "Password must be at least 8 characters")
+      .min(6, "Password must be at least 6 characters")
       .max(32, "Password cannot exceed 32 characters")
-      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .matches(/[0-9]/, "Password must contain at least one number")
-      .matches(
-        /[!@#$%^&*(),.?":{}|<>]/,
-        "Password must contain at least one special character",
-      )
+      // .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+      // .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+      // .matches(/[0-9]/, "Password must contain at least one number")
+      // .matches(
+      //   /[!@#$%^&*(),.?":{}|<>]/,
+      //   "Password must contain at least one special character",
+      //)
       .required("Password is required"),
   })
   .required();
@@ -46,12 +48,6 @@ const SignInScreen = () => {
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
   });
-
-  const nav = useNavigation();
-  const login = (formData: FormData, link: string) => {
-    nav.navigate(link);
-    console.log(formData);
-  };
   function showMess(message: string) {
     return showMessage({
       message: message,
@@ -60,6 +56,29 @@ const SignInScreen = () => {
       color: "#fff",
     });
   }
+  const nav = useNavigation();
+  const login = async (formData: FormData, link: string) => {
+    try {
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password,
+      );
+      showMess("Login successful");
+      console.log(userCredentials);
+      nav.navigate(link);
+    } catch (e) {
+      if (e.code === "auth/user-not-found") {
+        showMess("User not found. Please check your email or sign up.");
+      } else if (e.code === "auth/invalid-credential") {
+        showMess("Invalid email or password");
+      } else {
+        showMess("An error occurred. Please try again.");
+      }
+      console.error(e);
+    }
+  };
+
   return (
     <AppSaveView>
       <ScrollView>
