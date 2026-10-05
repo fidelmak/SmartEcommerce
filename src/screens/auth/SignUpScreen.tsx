@@ -15,6 +15,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import AppTextInputController from "../../components/inputs/AppTextInputController";
+import showMess from "../../components/notification/ShowMessage";
+import { auth } from "../../config/firebase";
+import { Auth, createUserWithEmailAndPassword } from "firebase/auth";
 
 // schema
 const schema = yup
@@ -43,7 +46,7 @@ const schema = yup
   .required();
 
 //
-
+type FormData = yup.InferType<typeof schema>;
 const SignUpScreen = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -55,19 +58,32 @@ const SignUpScreen = () => {
     resolver: yupResolver(schema),
   });
 
-  const register = (formData: FormData, link: string) => {
-    nav.navigate(link);
-    console.log(formData);
+  const register = async (formData: FormData, link: string) => {
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password,
+      );
+
+      showMess("Registration  successful", "green");
+      nav.navigate(link);
+      console.log(formData);
+      return userCredentials.user;
+    } catch (e) {
+      if (e.code === "auth/email-already-in-use") {
+        showMess("Email already in use. Please use a different email.", "red");
+      } else if (e.code === "auth/invalid-email") {
+        showMess("Invalid email address. Please check your email.", "red");
+      } else {
+        showMess(
+          "An error occurred during registration. Please try again.",
+          "red",
+        );
+      }
+    }
   };
 
-  function showMess(message: string) {
-    return showMessage({
-      message: message,
-
-      backgroundColor: "purple", // background color
-      color: "#fff",
-    });
-  }
   return (
     <AppSaveView>
       <ScrollView>
@@ -149,3 +165,10 @@ const styles = StyleSheet.create({
     marginBottom: s(16),
   },
 });
+function signUpWithEmailAndPassword(
+  auth: Auth,
+  email: string,
+  password: string,
+) {
+  throw new Error("Function not implemented.");
+}

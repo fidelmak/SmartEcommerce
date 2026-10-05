@@ -1,20 +1,30 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppSaveView from "../../components/saveView/AppSaveView";
 import HomeHeader from "../../components/header/HomeHeader";
 import { AppFonts } from "../../styles/AppFonts";
 import AppText from "../../components/text/AppText";
 import ProductCard from "../../components/cards/ProductCard";
 import { sharedHorizontalPadding } from "../../constants/SharedStyles";
-import { products } from "../../data/products";
+//import { products } from "../../data/products";
 import AppTextInput from "../../components/inputs/AppTextInput";
 import { s, vs } from "react-native-size-matters";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "../../store/reducer/cartSlice";
+import { getProductsData } from "../../config/database";
 
 const HomeScreen = () => {
   const [search, setSearch] = useState();
   const dispatch = useDispatch();
+  const [products, setProducts] = useState([]);
+  const fetchData = async () => {
+    const data = await getProductsData();
+    console.log(data);
+    setProducts(data);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <AppSaveView>
       <HomeHeader />
@@ -42,10 +52,12 @@ const HomeScreen = () => {
           numColumns={2}
           data={products}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
+          renderItem={(
+            { item }, //
+          ) => (
             <ProductCard
               {...item}
-              //  price={item.price}
+              //price={item.price}
               // title={item.title}
               // imageUrl={item.imageURL}
               onPress={() => {

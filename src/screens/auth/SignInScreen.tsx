@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { auth } from "../../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import showMess from "../../components/notification/ShowMessage";
 
 // schema
 const schema = yup
@@ -48,14 +49,7 @@ const SignInScreen = () => {
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
   });
-  function showMess(message: string) {
-    return showMessage({
-      message: message,
 
-      backgroundColor: "purple", // background color
-      color: "#fff",
-    });
-  }
   const nav = useNavigation();
   const login = async (formData: FormData, link: string) => {
     try {
@@ -64,16 +58,16 @@ const SignInScreen = () => {
         formData.email,
         formData.password,
       );
-      showMess("Login successful");
+      showMess("Login successful", "green");
       console.log(userCredentials);
       nav.navigate(link);
     } catch (e) {
       if (e.code === "auth/user-not-found") {
-        showMess("User not found. Please check your email or sign up.");
+        showMess("User not found. Please check your email or sign up.", "red");
       } else if (e.code === "auth/invalid-credential") {
-        showMess("Invalid email or password");
+        showMess("Invalid email or password", "red");
       } else {
-        showMess("An error occurred. Please try again.");
+        showMess("An error occurred. Please try again.", "red");
       }
       console.error(e);
     }
