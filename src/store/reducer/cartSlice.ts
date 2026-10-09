@@ -74,10 +74,13 @@ const initialState:CartState = {
         removeTotalItem:(state,action) =>{
             state.items=state.items.filter(
                 item => item.id !== action.payload.id)
+        },
+        emptyCart:(state) =>{
+            state.items = []
         }
 
     }
 })
 
-export const {addItemToCart, removeFromCart,increaseItem, removeTotalItem} = cartSlice.actions;
+export const {addItemToCart, removeFromCart,increaseItem, removeTotalItem, emptyCart} = cartSlice.actions;
 export default cartSlice.reducer;

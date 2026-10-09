@@ -12,6 +12,7 @@ import { s, vs } from "react-native-size-matters";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "../../store/reducer/cartSlice";
 import { getProductsData } from "../../config/database";
+import showMess from "../../components/notification/ShowMessage";
 
 const HomeScreen = () => {
   const [search, setSearch] = useState();
@@ -61,6 +62,7 @@ const HomeScreen = () => {
               // title={item.title}
               // imageUrl={item.imageURL}
               onPress={() => {
+                showMess(`${item.title} added to cart`, "green");
                 dispatch(addItemToCart(item));
               }}
             />

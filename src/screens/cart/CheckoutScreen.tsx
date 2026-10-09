@@ -6,11 +6,24 @@ import { AppColors } from "../../styles/AppColors";
 import AppTextInput from "../../components/inputs/AppTextInput";
 import { sharedHorizontalPadding } from "../../constants/SharedStyles";
 import AppButton from "../../components/buttons/AppButton";
-import { IS_ANDROID, IS_IOS } from "../../constants/constant";
+import {
+  IS_ANDROID,
+  IS_IOS,
+  SHIPPING_FEE,
+  TAX,
+} from "../../constants/constant";
 import AppTextInputController from "../../components/inputs/AppTextInputController";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { addDoc, collection, doc } from "firebase/firestore";
+import { db } from "../../config/firebase";
+import showMess from "../../components/notification/ShowMessage";
+import { useNavigation } from "@react-navigation/native";
+import { emptyCart, removeTotalItem } from "../../store/reducer/cartSlice";
+import EmptyCart from "./EmptyCart";
 
 const schema = yup
   .object({
@@ -36,9 +49,41 @@ const CheckoutScreen = () => {
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
   });
-  const saveOrder = (formData: FormData) => {
-    console.log(formData);
+
+  // to access the userdata
+  const { userData } = useSelector((state: RootState) => state.userSlice);
+  const { items } = useSelector((state: RootState) => state.cartSlice);
+  const dispatch = useDispatch();
+  const totalProductItemSum = items.reduce((acc, item) => acc + item.sum, 0);
+  const orderTotal = totalProductItemSum + SHIPPING_FEE + TAX;
+
+  const navigation = useNavigation();
+
+  const saveOrder = async (formData: FormData) => {
+    try {
+      const data = {
+        ...formData,
+        items,
+        totalProductItemSum,
+        orderTotal,
+        createdAt: new Date().toISOString(),
+      };
+      const userOrderRef = collection(doc(db, "users", userData.uid), "orders");
+      await addDoc(userOrderRef, data);
+      const orderRef = collection(db, "orders");
+      await addDoc(orderRef, data);
+
+      showMess("Order placed successfully", "green");
+
+      navigation.goBack();
+      dispatch(emptyCart());
+    } catch (e) {
+      showMess("Failed to place order", "red");
+      console.error("Error placing order: ", e);
+    }
   };
+
+  const PlaceOrder = () => {};
 
   return (
     <AppSaveView>

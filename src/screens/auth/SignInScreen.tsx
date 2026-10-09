@@ -17,6 +17,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { auth } from "../../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import showMess from "../../components/notification/ShowMessage";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../store/reducer/userReducer";
 
 // schema
 const schema = yup
@@ -31,13 +33,7 @@ const schema = yup
       .string()
       .min(6, "Password must be at least 6 characters")
       .max(32, "Password cannot exceed 32 characters")
-      // .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-      // .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-      // .matches(/[0-9]/, "Password must contain at least one number")
-      // .matches(
-      //   /[!@#$%^&*(),.?":{}|<>]/,
-      //   "Password must contain at least one special character",
-      //)
+
       .required("Password is required"),
   })
   .required();
@@ -51,6 +47,8 @@ const SignInScreen = () => {
   });
 
   const nav = useNavigation();
+
+  const dispatch = useDispatch();
   const login = async (formData: FormData, link: string) => {
     try {
       const userCredentials = await signInWithEmailAndPassword(
@@ -59,7 +57,13 @@ const SignInScreen = () => {
         formData.password,
       );
       showMess("Login successful", "green");
-      console.log(userCredentials);
+      const userDataObject = {
+        uid: userCredentials.user.uid,
+        email: userCredentials.user.email,
+      };
+
+      dispatch(setUserData(userDataObject));
+
       nav.navigate(link);
     } catch (e) {
       if (e.code === "auth/user-not-found") {

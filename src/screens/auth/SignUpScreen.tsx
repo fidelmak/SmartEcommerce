@@ -18,6 +18,8 @@ import AppTextInputController from "../../components/inputs/AppTextInputControll
 import showMess from "../../components/notification/ShowMessage";
 import { auth } from "../../config/firebase";
 import { Auth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../store/reducer/userReducer";
 
 // schema
 const schema = yup
@@ -53,6 +55,7 @@ const SignUpScreen = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigation();
+  const dispatch = useDispatch();
 
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
@@ -69,7 +72,13 @@ const SignUpScreen = () => {
       showMess("Registration  successful", "green");
       nav.navigate(link);
       console.log(formData);
-      return userCredentials.user;
+      // return userCredentials.user;
+      const userDataObject = {
+        uid: userCredentials.user.uid,
+        email: userCredentials.user.email,
+      };
+
+      dispatch(setUserData(userDataObject));
     } catch (e) {
       if (e.code === "auth/email-already-in-use") {
         showMess("Email already in use. Please use a different email.", "red");
