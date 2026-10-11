@@ -1,8 +1,10 @@
 import { StyleSheet, FlatList } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppSaveView from "../../components/saveView/AppSaveView";
 import { sharedHorizontalPadding } from "../../constants/SharedStyles";
 import OrderCard from "../../components/order/OrderCard";
+import { fetchUserOrders } from "../../config/database";
+import { getFirebaseDateStamp } from "../../helpers/DateTimeHelper";
 
 const OrderScreen = () => {
   const orders = [
@@ -87,25 +89,40 @@ const OrderScreen = () => {
       color2: "red",
     },
   ];
+  const [orderList, setOrder] = useState([]);
 
-  const renderItem = ({ item }) => (
-    <OrderCard
-      trackingId={item.trackingId}
-      orderStatus={item.orderStatus}
-      address={item.address}
-      orderDate={item.orderDate}
-      color={item.color}
-      color2={item.color2}
-      onPress={() => {
-        console.log("Order pressed:", item.trackingId);
-      }}
-    />
-  );
+  const getOrder = async () => {
+    const userOrders = await fetchUserOrders();
+    setOrder(userOrders);
+  };
+
+  useEffect(() => {
+    getOrder();
+  }, []);
+
+  const renderItem = ({ item }) => {
+    console.log("_______________________");
+    console.log(JSON.stringify(item));
+    return (
+      <OrderCard
+        trackingId={item.id}
+        orderPrice={item.totalProductItemSum.toFixed(2)}
+        address={item.address}
+        orderDate={getFirebaseDateStamp(item.createdAt)}
+        color={item.color}
+        color2={item.color2}
+        onPress={() => {
+          console.log("Order pressed:", item.trackingId);
+        }}
+        orderStatus={""}
+      />
+    );
+  };
 
   return (
     <AppSaveView>
       <FlatList
-        data={orders}
+        data={orderList}
         keyExtractor={(item) => item.trackingId}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}

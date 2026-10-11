@@ -7,6 +7,8 @@ import { sharedHorizontalPadding } from "../constants/SharedStyles";
 import ProfileDetails from "./ProfileDetails";
 import { useNavigation } from "@react-navigation/native";
 import OrderScreen from "../screens/order/OrderScreen";
+import { SheetManager } from "react-native-actions-sheet";
+import LanguageBottomSheet from "../components/language/LanguageBottomSheet";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -18,9 +20,13 @@ const ProfileScreen = () => {
           title={"My Orders"}
           onPress={() => navigation.navigate(OrderScreen)}
         />
-        <ProfileSectionButton title={"Settings"} />
+        <ProfileSectionButton
+          title={"Language"}
+          onPress={() => SheetManager.show("LANG_SHEET")}
+        />
         <ProfileSectionButton title={"Log out"} />
       </View>
+      <LanguageBottomSheet />
     </AppSaveView>
   );
 };

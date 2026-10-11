@@ -15,6 +15,7 @@ interface orderCardProps {
   trackingId: string;
   orderStatus: string;
   address: string;
+  orderPrice: number;
   orderDate: string;
   color: string;
   color2: string;
@@ -22,6 +23,7 @@ interface orderCardProps {
 }
 
 const OrderCard: React.FC<orderCardProps> = ({
+  orderPrice,
   trackingId,
   orderStatus,
   address,
@@ -84,6 +86,7 @@ const OrderCard: React.FC<orderCardProps> = ({
         >
           Delivery Date
         </AppText>
+
         <View
           style={{
             flexDirection: "row",
@@ -95,6 +98,21 @@ const OrderCard: React.FC<orderCardProps> = ({
             {orderDate}
           </AppText>
           <AppText style={styles.details}>details</AppText>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+          }}
+        >
+          <AppText>Price:</AppText>
+          <AppText
+            style={{ fontSize: s(20), color: AppColors.black }}
+            variant="medium"
+          >
+            ${orderPrice}
+          </AppText>
         </View>
       </View>
     </TouchableOpacity>

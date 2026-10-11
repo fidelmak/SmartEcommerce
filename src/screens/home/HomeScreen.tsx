@@ -41,7 +41,7 @@ const HomeScreen = () => {
           placeholder={"search"}
           secureTextEntry={false}
           keyboardType={"default"}
-          style={undefined}
+          style={{}}
         />
       </View>
 

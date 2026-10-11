@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     padding: s(8),
     borderRadius: s(8),
     backgroundColor: AppColors.white,
-    marginTop: IS_IOS ? vs(12) : undefined,
+    marginTop: IS_IOS ? vs(12) : vs(8),
     paddingTop: vs(8),
   },
 });
