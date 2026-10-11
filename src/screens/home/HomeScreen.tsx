@@ -13,11 +13,13 @@ import { useDispatch } from "react-redux";
 import { addItemToCart } from "../../store/reducer/cartSlice";
 import { getProductsData } from "../../config/database";
 import showMess from "../../components/notification/ShowMessage";
+import { useTranslation } from "react-i18next";
 
 const HomeScreen = () => {
   const [search, setSearch] = useState();
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
+  const { t } = useTranslation();
   const fetchData = async () => {
     const data = await getProductsData();
     console.log(data);
@@ -38,7 +40,7 @@ const HomeScreen = () => {
         <AppTextInput
           values={search}
           onChangeText={() => setSearch}
-          placeholder={"search"}
+          placeholder={t("searchPlaceholder")}
           secureTextEntry={false}
           keyboardType={"default"}
           style={{}}
@@ -62,7 +64,7 @@ const HomeScreen = () => {
               // title={item.title}
               // imageUrl={item.imageURL}
               onPress={() => {
-                showMess(`${item.title} added to cart`, "green");
+                showMess(t("addedToCart", { title: item.title }), "green");
                 dispatch(addItemToCart(item));
               }}
             />

@@ -20,30 +20,29 @@ import { auth } from "../../config/firebase";
 import { Auth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../store/reducer/userReducer";
+import { useTranslation } from "react-i18next";
+import i18n from "../../localization/i18n";
 
 // schema
 const schema = yup
   .object({
-    name: yup.string().lowercase().required("Name is required"),
-    phone: yup.string().lowercase().required("Phone is required"),
+    name: yup.string().lowercase().required(() => i18n.t("nameRequired")),
+    phone: yup.string().lowercase().required(() => i18n.t("phoneRequired")),
     email: yup
       .string()
       .lowercase()
-      .required("Email is required")
-      .email("Invalid email address"),
+      .required(() => i18n.t("emailRequired"))
+      .email(() => i18n.t("invalidEmail")),
 
     password: yup
       .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(32, "Password cannot exceed 32 characters")
-      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .matches(/[0-9]/, "Password must contain at least one number")
-      .matches(
-        /[!@#$%^&*(),.?":{}|<>]/,
-        "Password must contain at least one special character",
-      )
-      .required("Password is required"),
+      .min(8, () => i18n.t("passwordMin8"))
+      .max(32, () => i18n.t("passwordMax32"))
+      .matches(/[a-z]/, () => i18n.t("passwordLower"))
+      .matches(/[A-Z]/, () => i18n.t("passwordUpper"))
+      .matches(/[0-9]/, () => i18n.t("passwordNumber"))
+      .matches(/[!@#$%^&*(),.?":{}|<>]/, () => i18n.t("passwordSpecial"))
+      .required(() => i18n.t("passwordRequired")),
   })
   .required();
 
@@ -61,6 +60,8 @@ const SignUpScreen = () => {
     resolver: yupResolver(schema),
   });
 
+  const { t } = useTranslation();
+
   const register = async (formData: FormData, link: string) => {
     try {
       const userCredentials = await createUserWithEmailAndPassword(
@@ -69,7 +70,7 @@ const SignUpScreen = () => {
         formData.password,
       );
 
-      showMess("Registration  successful", "green");
+      showMess(t("registrationSuccess"), "green");
       nav.navigate(link);
       console.log(formData);
       // return userCredentials.user;
@@ -81,14 +82,11 @@ const SignUpScreen = () => {
       dispatch(setUserData(userDataObject));
     } catch (e) {
       if (e.code === "auth/email-already-in-use") {
-        showMess("Email already in use. Please use a different email.", "red");
+        showMess(t("emailInUse"), "red");
       } else if (e.code === "auth/invalid-email") {
-        showMess("Invalid email address. Please check your email.", "red");
+        showMess(t("invalidEmailCheck"), "red");
       } else {
-        showMess(
-          "An error occurred during registration. Please try again.",
-          "red",
-        );
+        showMess(t("registrationError"), "red");
       }
     }
   };
@@ -99,33 +97,33 @@ const SignUpScreen = () => {
         <View style={styles.container}>
           <Image source={IMAGES.appLogo} style={styles.logo} />
           <AppText style={{ alignSelf: "center" }} variant="bold">
-            Create Account
+            {t("signUpTitle")}
           </AppText>
           <View style={{ height: vs(20) }}></View>
           <AppTextInputController
             control={control}
             name={"name"}
-            placeHolder={"name"}
+            placeHolder={t("namePlaceholder")}
             secureTextEntry={false}
           />
 
           <AppTextInputController
             control={control}
             name={"email"}
-            placeHolder={"email"}
+            placeHolder={t("emailPlaceholder")}
             secureTextEntry={false}
           />
           <AppTextInputController
             control={control}
             name={"phone"}
-            placeHolder={"phone"}
+            placeHolder={t("phonePlaceholder")}
             keyboardType="numeric"
             secureTextEntry={false}
           />
           <AppTextInputController
             control={control}
             name={"password"}
-            placeHolder={"password"}
+            placeHolder={t("passwordPlaceholder")}
             secureTextEntry={true}
           />
 
@@ -134,7 +132,7 @@ const SignUpScreen = () => {
             onPress={handleSubmit((formData) =>
               register(formData, "MainAppBottomTab"),
             )}
-            title="Continue"
+            title={t("continue")}
             style={{}}
             styleTitle={{}}
           />
@@ -142,12 +140,12 @@ const SignUpScreen = () => {
           <View
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
-            <AppText>Already have account?</AppText>
+            <AppText>{t("alreadyHaveAccount")}</AppText>
             <AppText
               style={{ color: AppColors.blue }}
               onPress={() => nav.navigate("SignInScreen")}
             >
-              login
+              {t("loginLink")}
             </AppText>
           </View>
         </View>

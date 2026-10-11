@@ -1,41 +1,51 @@
 import { StyleSheet, View } from "react-native";
-import React, { useState } from "react";
-import ActionSheet from "react-native-actions-sheet";
+import React, { useRef, useState } from "react";
+import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
+import { useTranslation } from "react-i18next";
 import AppText from "../text/AppText";
 import AppButton from "../buttons/AppButton";
 import { s } from "react-native-size-matters";
 import RadioWithTitle from "../radiotitle/RadioWithTitle";
 
+const LANGUAGES = [
+  { code: "en", label: "English" },
+  { code: "es", label: "Español" },
+  { code: "fr", label: "Français" },
+];
+
 const LanguageBottomSheet = () => {
-  const [selectLanguage, setSelectLanguage] = useState("English");
-
-  const languages = ["English", "Spanish", "Espanyol"];
-
-  const setLang = (value) => {
-    setSelectLanguage(value);
-  };
+  const { t, i18n } = useTranslation();
+  const sheetRef = useRef<ActionSheetRef>(null);
+  const [selectLanguage, setSelectLanguage] = useState(
+    i18n.language?.split("-")[0] ?? "en",
+  );
 
   const handleConfirm = () => {
-    console.log("Selected language:", selectLanguage);
-
-    // Apply or save the selected language here.
+    i18n.changeLanguage(selectLanguage);
+    sheetRef.current?.hide();
   };
 
   return (
-    <ActionSheet id="LANG_SHEET">
+    <ActionSheet id="LANG_SHEET" ref={sheetRef}>
       <View style={styles.container}>
-        <AppText style={styles.title}>Change Language</AppText>
+        <AppText style={styles.title}>{t("changeLanguageTitle")}</AppText>
 
-        {languages.map((language) => (
+        {LANGUAGES.map((language) => (
           <RadioWithTitle
-            key={language}
-            title={language}
-            selected={selectLanguage === language}
-            onPress={() => setLang(language)}
+            key={language.code}
+            title={language.label}
+            selected={selectLanguage === language.code}
+            onPress={() => setSelectLanguage(language.code)}
           />
         ))}
 
-        <AppButton title="Confirm" onPress={handleConfirm} />
+        <AppButton
+          title={t("confirm")}
+          onPress={handleConfirm}
+          style={{}}
+          styleTitle={{}}
+          disabled={false}
+        />
       </View>
     </ActionSheet>
   );

@@ -8,6 +8,7 @@ import {
 import React from "react";
 import AppText from "../text/AppText";
 import { sharedHorizontalPadding } from "../../constants/SharedStyles";
+import { useTranslation } from "react-i18next";
 import { s, vs } from "react-native-size-matters";
 import { AppFonts } from "../../styles/AppFonts";
 import { AppColors } from "../../styles/AppColors";
@@ -32,6 +33,7 @@ const OrderCard: React.FC<orderCardProps> = ({
   color2,
   onPress,
 }) => {
+  const { t } = useTranslation();
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       {/* order Progress */}
@@ -41,7 +43,7 @@ const OrderCard: React.FC<orderCardProps> = ({
             style={{ fontSize: s(10), color: AppColors.grey }}
             variant="medium"
           >
-            TRACKING ID
+            {t("trackingIdLabel")}
           </AppText>
           <AppText style={{ fontSize: s(16) }} variant="bold">
             {trackingId}
@@ -71,7 +73,7 @@ const OrderCard: React.FC<orderCardProps> = ({
           style={{ fontSize: s(10), color: AppColors.grey }}
           variant="medium"
         >
-          Destination
+            {t("destinationLabel")}
         </AppText>
         <AppText style={{ fontSize: s(12) }} variant="bold">
           {address}
@@ -84,7 +86,7 @@ const OrderCard: React.FC<orderCardProps> = ({
           style={{ fontSize: s(10), color: AppColors.grey }}
           variant="medium"
         >
-          Delivery Date
+            {t("deliveryDateLabel")}
         </AppText>
 
         <View
@@ -97,7 +99,7 @@ const OrderCard: React.FC<orderCardProps> = ({
           <AppText style={{ fontSize: s(12) }} variant="bold">
             {orderDate}
           </AppText>
-          <AppText style={styles.details}>details</AppText>
+          <AppText style={styles.details}>{t("details")}</AppText>
         </View>
         <View
           style={{
@@ -106,7 +108,7 @@ const OrderCard: React.FC<orderCardProps> = ({
             alignItems: "baseline",
           }}
         >
-          <AppText>Price:</AppText>
+          <AppText>{t("priceLabel")}</AppText>
           <AppText
             style={{ fontSize: s(20), color: AppColors.black }}
             variant="medium"

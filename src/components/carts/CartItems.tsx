@@ -5,6 +5,7 @@ import AppText from "../text/AppText";
 import { AppFonts } from "../../styles/AppFonts";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { AppColors } from "../../styles/AppColors";
+import { useTranslation } from "react-i18next";
 
 interface cartItemsProps {
   imageURL: string;
@@ -25,6 +26,7 @@ const CartItems: React.FC<cartItemsProps> = ({
   onDecreasePress,
   qty,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       {/* image container */}
@@ -64,7 +66,7 @@ const CartItems: React.FC<cartItemsProps> = ({
       <View style={styles.deleteContainer}>
         <Pressable onPress={onDeletePress} style={styles.deleteButton}>
           <AntDesign name={"delete"} size={s(14)} color={AppColors.red} />
-          <AppText style={styles.deleteItem}>Delete</AppText>
+          <AppText style={styles.deleteItem}>{t("delete")}</AppText>
         </Pressable>
       </View>
     </View>

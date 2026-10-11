@@ -19,6 +19,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import showMess from "../../components/notification/ShowMessage";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../store/reducer/userReducer";
+import { useTranslation } from "react-i18next";
+import i18n from "../../localization/i18n";
 
 // schema
 const schema = yup
@@ -26,15 +28,15 @@ const schema = yup
     email: yup
       .string()
       .lowercase()
-      .required("Email is required")
-      .email("Invalid email address"),
+      .required(() => i18n.t("emailRequired"))
+      .email(() => i18n.t("invalidEmail")),
 
     password: yup
       .string()
-      .min(6, "Password must be at least 6 characters")
-      .max(32, "Password cannot exceed 32 characters")
+      .min(6, () => i18n.t("passwordMin6"))
+      .max(32, () => i18n.t("passwordMax32"))
 
-      .required("Password is required"),
+      .required(() => i18n.t("passwordRequired")),
   })
   .required();
 
@@ -46,6 +48,8 @@ const SignInScreen = () => {
     resolver: yupResolver(schema),
   });
 
+  const { t } = useTranslation();
+
   const nav = useNavigation();
 
   const dispatch = useDispatch();
@@ -56,7 +60,7 @@ const SignInScreen = () => {
         formData.email,
         formData.password,
       );
-      showMess("Login successful", "green");
+      showMess(t("loginSuccess"), "green");
       const userDataObject = {
         uid: userCredentials.user.uid,
         email: userCredentials.user.email,
@@ -67,11 +71,11 @@ const SignInScreen = () => {
       nav.navigate(link);
     } catch (e) {
       if (e.code === "auth/user-not-found") {
-        showMess("User not found. Please check your email or sign up.", "red");
+        showMess(t("userNotFound"), "red");
       } else if (e.code === "auth/invalid-credential") {
-        showMess("Invalid email or password", "red");
+        showMess(t("invalidCredentials"), "red");
       } else {
-        showMess("An error occurred. Please try again.", "red");
+        showMess(t("genericError"), "red");
       }
       console.error(e);
     }
@@ -83,21 +87,21 @@ const SignInScreen = () => {
         <View style={styles.container}>
           <Image source={IMAGES.appLogo} style={styles.logo} />
           <AppText style={{ alignSelf: "center" }} variant="bold">
-            Login to Account
+            {t("loginTitle")}
           </AppText>
           <View style={{ height: vs(20) }}></View>
 
           <AppTextInputController
             control={control}
             name={"email"}
-            placeHolder={"email"}
+            placeHolder={t("emailPlaceholder")}
             secureTextEntry={false}
           />
 
           <AppTextInputController
             control={control}
             name={"password"}
-            placeHolder={"password"}
+            placeHolder={t("passwordPlaceholder")}
             secureTextEntry={true}
           />
 
@@ -107,7 +111,7 @@ const SignInScreen = () => {
               handleSubmit((formData) => login(formData, "MainAppBottomTab"))
               //
             }
-            title="Continue"
+            title={t("continue")}
             style={{}}
             styleTitle={{}}
           />
@@ -115,12 +119,12 @@ const SignInScreen = () => {
           <View
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
-            <AppText>New here?</AppText>
+            <AppText>{t("newHere")}</AppText>
             <AppText
               style={{ color: AppColors.blue }}
               onPress={() => nav.navigate("SignUpScreen")}
             >
-              create account
+              {t("createAccountLink")}
             </AppText>
           </View>
         </View>

@@ -4,9 +4,11 @@ import MainAppBottomTab from "./MainAppBottomTab";
 import CheckoutScreen from "../screens/cart/CheckoutScreen";
 import OrderScreen from "../screens/order/OrderScreen";
 import { sharedHorizontalPadding } from "../constants/SharedStyles";
+import { useTranslation } from "react-i18next";
 const Stack = createStackNavigator();
 
 export default function MainStackScreen() {
+  const { t } = useTranslation();
   return (
     <Stack.Navigator
       screenOptions={{
@@ -20,7 +22,7 @@ export default function MainStackScreen() {
         options={{
           headerShown: true,
           headerBackTitle: "",
-          headerTitle: "Check-Out",
+          headerTitle: t("checkoutHeaderTitle"),
           headerTintColor: "#000",
           headerLeftContainerStyle: {
             paddingLeft: sharedHorizontalPadding,
@@ -33,7 +35,7 @@ export default function MainStackScreen() {
         options={{
           headerShown: true,
           headerBackTitle: "",
-          headerTitle: "Orders",
+          headerTitle: t("ordersHeaderTitle"),
           headerTintColor: "#000",
           headerLeftContainerStyle: {
             paddingLeft: sharedHorizontalPadding,

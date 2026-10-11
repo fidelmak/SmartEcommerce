@@ -8,9 +8,11 @@ import AppButton from "../../components/buttons/AppButton";
 import { sharedHorizontalPadding } from "../../constants/SharedStyles";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 const EmptyCart = () => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <MaterialCommunityIcons
@@ -19,14 +21,12 @@ const EmptyCart = () => {
         color={AppColors.primary}
         style={styles.icons}
       />
-      <AppText style={styles.title}>Your Cart is Empty</AppText>
-      <AppText style={styles.subTitle}>
-        Browse our product and find something you want{" "}
-      </AppText>
+      <AppText style={styles.title}>{t("cartEmptyTitle")}</AppText>
+      <AppText style={styles.subTitle}>{t("cartEmptySubtitle")}</AppText>
       <AppButton
         onPress={() => navigation.navigate("Home")}
         style={styles.button}
-        title="Start Shopping"
+        title={t("startShopping")}
       />
     </View>
   );

@@ -24,22 +24,24 @@ import showMess from "../../components/notification/ShowMessage";
 import { useNavigation } from "@react-navigation/native";
 import { emptyCart, removeTotalItem } from "../../store/reducer/cartSlice";
 import EmptyCart from "./EmptyCart";
+import { useTranslation } from "react-i18next";
+import i18n from "../../localization/i18n";
 
 const schema = yup
   .object({
     fullName: yup
       .string()
-      .required("Name is required")
-      .min(3, "Name must be at least 3 character"),
+      .required(() => i18n.t("nameRequired"))
+      .min(3, () => i18n.t("fullNameMin")),
     phoneNumber: yup
       .string()
-      .required("Phone Number  is required")
-      .matches(/^[0-9]+$/, " must be only didgit")
-      .min(10, "phone number must be at least 10 digits"),
+      .required(() => i18n.t("phoneNumberRequired"))
+      .matches(/^[0-9]+$/, () => i18n.t("phoneNumberDigit"))
+      .min(10, () => i18n.t("phoneNumberMin")),
     address: yup
       .string()
-      .required("Address is required")
-      .min(15, "Address must be at least 15 character"),
+      .required(() => i18n.t("addressRequired"))
+      .min(15, () => i18n.t("addressMin")),
   })
   .required();
 
@@ -49,6 +51,8 @@ const CheckoutScreen = () => {
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const { t } = useTranslation();
 
   // to access the userdata
   const { userData } = useSelector((state: RootState) => state.userSlice);
@@ -73,12 +77,12 @@ const CheckoutScreen = () => {
       const orderRef = collection(db, "orders");
       await addDoc(orderRef, data);
 
-      showMess("Order placed successfully", "green");
+      showMess(t("orderPlacedSuccess"), "green");
 
       navigation.goBack();
       dispatch(emptyCart());
     } catch (e) {
-      showMess("Failed to place order", "red");
+      showMess(t("orderPlacedFailed"), "red");
       console.error("Error placing order: ", e);
     }
   };
@@ -92,23 +96,23 @@ const CheckoutScreen = () => {
           <AppTextInputController
             control={control}
             name={"fullName"}
-            placeHolder={"Full Name"}
+            placeHolder={t("fullNamePlaceholder")}
           />
           <AppTextInputController
             control={control}
             name={"phoneNumber"}
-            placeHolder={"Phone Number"}
+            placeHolder={t("phoneNumberPlaceholder")}
             keyboardType={"numeric"}
           />
           <AppTextInputController
             control={control}
             name={"address"}
-            placeHolder={"Address"}
+            placeHolder={t("addressPlaceholder")}
           />
         </View>
       </View>
       <View style={styles.bottomButtonContainer}>
-        <AppButton title="Confirm" onPress={handleSubmit(saveOrder)} />
+        <AppButton title={t("confirm")} onPress={handleSubmit(saveOrder)} />
       </View>
     </AppSaveView>
   );

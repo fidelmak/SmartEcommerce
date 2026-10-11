@@ -1,3 +1,4 @@
+import "./src/localization/i18n";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import AppText from "./src/components/text/AppText";
@@ -14,6 +15,9 @@ import { useFonts } from "expo-font";
 import { Provider } from "react-redux";
 import { store } from "./src/store/store";
 
+import i18n from "./src/localization/i18n";
+import { I18nextProvider } from "react-i18next";
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     "Nunito-Bold": require("./src/assets/fonts/Nunito-Bold.ttf"),
@@ -25,10 +29,12 @@ export default function App() {
   return (
     <>
       <Provider store={store}>
-        <NavigationContainer>
-          <FlashMessage position={"bottom"} />
-          <MainStackScreen />
-        </NavigationContainer>
+        <I18nextProvider i18n={i18n}>
+          <NavigationContainer>
+            <FlashMessage position={"bottom"} />
+            <MainStackScreen />
+          </NavigationContainer>
+        </I18nextProvider>
       </Provider>
     </>
   );

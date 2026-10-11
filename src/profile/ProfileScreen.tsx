@@ -9,22 +9,26 @@ import { useNavigation } from "@react-navigation/native";
 import OrderScreen from "../screens/order/OrderScreen";
 import { SheetManager } from "react-native-actions-sheet";
 import LanguageBottomSheet from "../components/language/LanguageBottomSheet";
+import { useTranslation } from "react-i18next";
+import AppText from "../components/text/AppText";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
   return (
     <AppSaveView>
       <ProfileDetails />
+
       <View style={{ paddingHorizontal: sharedHorizontalPadding }}>
         <ProfileSectionButton
-          title={"My Orders"}
+          title={t("profileMyOrders")}
           onPress={() => navigation.navigate(OrderScreen)}
         />
         <ProfileSectionButton
-          title={"Language"}
+          title={t("profileLanguage")}
           onPress={() => SheetManager.show("LANG_SHEET")}
         />
-        <ProfileSectionButton title={"Log out"} />
+        <ProfileSectionButton title={t("profileLogout")} />
       </View>
       <LanguageBottomSheet />
     </AppSaveView>

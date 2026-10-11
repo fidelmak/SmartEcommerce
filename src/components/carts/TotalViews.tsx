@@ -4,6 +4,7 @@ import { s, vs } from "react-native-size-matters";
 import AppText from "../text/AppText";
 import { AppFonts } from "../../styles/AppFonts";
 import { AppColors } from "../../styles/AppColors";
+import { useTranslation } from "react-i18next";
 import AppButton from "../buttons/AppButton";
 
 interface TotalViewProps {
@@ -21,6 +22,8 @@ const TotalView: React.FC<TotalViewProps> = ({
   orderTotal,
   onCheckoutPress,
 }) => {
+  const { t } = useTranslation();
+
   const formatPrice = (price: number | string) => {
     const amount = Number(price);
 
@@ -35,19 +38,19 @@ const TotalView: React.FC<TotalViewProps> = ({
     <View style={styles.container}>
       {/* Item Price */}
       <View style={styles.row}>
-        <AppText style={styles.label}>Item(s) Price</AppText>
+        <AppText style={styles.label}>{t("itemPrice")}</AppText>
         <AppText style={styles.value}>{formatPrice(itemPrice)}</AppText>
       </View>
 
       {/* Tax */}
       <View style={styles.row}>
-        <AppText style={styles.label}>Taxes</AppText>
+        <AppText style={styles.label}>{t("taxes")}</AppText>
         <AppText style={styles.value}>{formatPrice(tax)}</AppText>
       </View>
 
       {/* Shipping */}
       <View style={styles.row}>
-        <AppText style={styles.label}>Shipping Fee</AppText>
+        <AppText style={styles.label}>{t("shippingFee")}</AppText>
         <AppText style={styles.value}>{formatPrice(shippingFee)}</AppText>
       </View>
 
@@ -55,7 +58,7 @@ const TotalView: React.FC<TotalViewProps> = ({
       <View style={styles.divider} />
 
       <View style={styles.totalRow}>
-        <AppText style={styles.totalLabel}>Order Total</AppText>
+        <AppText style={styles.totalLabel}>{t("orderTotal")}</AppText>
         <AppText style={styles.totalValue}>{formatPrice(orderTotal)}</AppText>
       </View>
 
@@ -64,7 +67,7 @@ const TotalView: React.FC<TotalViewProps> = ({
       <AppButton
         onPress={onCheckoutPress}
         style={styles.button}
-        title="Checkout"
+        title={t("checkout")}
       />
     </View>
   );
