@@ -1,133 +1,120 @@
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, ActivityIndicator, View } from "react-native";
 import React, { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import AppSaveView from "../../components/saveView/AppSaveView";
+import AppText from "../../components/text/AppText";
 import { sharedHorizontalPadding } from "../../constants/SharedStyles";
 import OrderCard from "../../components/order/OrderCard";
 import { fetchUserOrders } from "../../config/database";
 import { getFirebaseDateStamp } from "../../helpers/DateTimeHelper";
 
 const OrderScreen = () => {
-  const orders = [
-    {
-      trackingId: "DE-8029-XPL",
-      orderStatus: "delivered",
-      address: "24 Crescent Avenue de Parlo",
-      orderDate: "Aug. 12, 2026 - 07:05am",
-      color: "#DAFFEE",
-      color2: "green",
-    },
-    {
-      trackingId: "BC-8829-XPL",
-      orderStatus: "failed",
-      address: "15 Marina Road, Lagos",
-      orderDate: "Sept. 23, 2026 - 10:00am",
-      color: "#FEE8E8",
-      color2: "red",
-    },
-    {
-      trackingId: "KL-4721-MNP",
-      orderStatus: "pending",
-      address: "8 Allen Avenue, Ikeja",
-      orderDate: "Sept. 23, 2026 - 11:30am",
-      color: "#FFFBD1",
-      color2: "#706701",
-    },
-    {
-      trackingId: "GH-1938-QRS",
-      orderStatus: "delivered",
-      address: "42 Admiralty Way, Lekki",
-      orderDate: "Sept. 20, 2026 - 02:15pm",
-      color: "#DAFFEE",
-      color2: "green",
-    },
-    {
-      trackingId: "TX-5820-ABC",
-      orderStatus: "pending",
-      address: "12 Obafemi Awolowo Way, Ikeja",
-      orderDate: "Sept. 21, 2026 - 09:45am",
-      color: "#FFFBD1",
-      color2: "#706701",
-    },
-    {
-      trackingId: "MN-7392-DEF",
-      orderStatus: "failed",
-      address: "31 Herbert Macaulay Way, Yaba",
-      orderDate: "Sept. 19, 2026 - 04:20pm",
-      color: "#FEE8E8",
-      color2: "red",
-    },
-    {
-      trackingId: "PL-6401-GHI",
-      orderStatus: "delivered",
-      address: "7 Ahmadu Bello Way, Victoria Island",
-      orderDate: "Sept. 18, 2026 - 01:10pm",
-      color: "#DAFFEE",
-      color2: "green",
-    },
-    {
-      trackingId: "QR-9217-JKL",
-      orderStatus: "pending",
-      address: "19 Admiralty Road, Lekki",
-      orderDate: "Sept. 17, 2026 - 08:30am",
-      color: "#FFFBD1",
-      color2: "#706701",
-    },
-    {
-      trackingId: "UV-3584-MNO",
-      orderStatus: "delivered",
-      address: "5 Isaac John Street, GRA Ikeja",
-      orderDate: "Sept. 15, 2026 - 03:45pm",
-      color: "#DAFFEE",
-      color2: "green",
-    },
-    {
-      trackingId: "WX-8163-PQR",
-      orderStatus: "failed",
-      address: "28 Lagos Street, Surulere",
-      orderDate: "Sept. 14, 2026 - 11:25am",
-      color: "#FEE8E8",
-      color2: "red",
-    },
-  ];
-  const [orderList, setOrder] = useState([]);
-
-  const getOrder = async () => {
-    const userOrders = await fetchUserOrders();
-    setOrder(userOrders);
-  };
+  const [orderList, setOrder] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getOrder();
+    let isMounted = true;
+
+    const loadOrders = async () => {
+      try {
+        // 1. Get the logged-in user
+        const storedUser = await AsyncStorage.getItem("USER_DATA");
+
+        if (!storedUser) {
+          if (isMounted) {
+            setOrder([]);
+            setLoading(false);
+          }
+          return;
+        }
+
+        const user = JSON.parse(storedUser);
+        const userId = user?.uid;
+
+        if (!userId) {
+          throw new Error("User ID not found");
+        }
+
+        // Use a separate cache for each user
+        const cacheKey = `USER_ORDER_${userId}`;
+
+        // 2. Load cached orders immediately
+        const cachedOrders = await AsyncStorage.getItem(cacheKey);
+
+        if (cachedOrders && isMounted) {
+          setOrder(JSON.parse(cachedOrders));
+          setLoading(false);
+        }
+
+        // 3. Fetch the latest orders from Firebase
+        const freshOrders = await fetchUserOrders(userId);
+
+        if (isMounted) {
+          setOrder(freshOrders ?? []);
+          setLoading(false);
+        }
+
+        // 4. Save the latest orders locally
+        await AsyncStorage.setItem(cacheKey, JSON.stringify(freshOrders ?? []));
+      } catch (err) {
+        console.log("Error loading orders:", err);
+
+        if (isMounted) {
+          setError("Unable to refresh orders.");
+          setLoading(false);
+        }
+      }
+    };
+
+    loadOrders();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const renderItem = ({ item }) => {
-    console.log("_______________________");
-    console.log(JSON.stringify(item));
-    return (
-      <OrderCard
-        trackingId={item.id}
-        orderPrice={item.totalProductItemSum.toFixed(2)}
-        address={item.address}
-        orderDate={getFirebaseDateStamp(item.createdAt)}
-        color={item.color}
-        color2={item.color2}
-        onPress={() => {
-          console.log("Order pressed:", item.trackingId);
-        }}
-        orderStatus={""}
-      />
-    );
-  };
+  const renderItem = ({ item }: { item: any }) => (
+    <OrderCard
+      trackingId={item.id}
+      orderPrice={Number(item.totalProductItemSum ?? 0).toFixed(2)}
+      address={item.address}
+      orderDate={item.createdAt ? getFirebaseDateStamp(item.createdAt) : ""}
+      color={item.color}
+      color2={item.color2}
+      onPress={() => {
+        console.log("Order pressed:", item.id);
+      }}
+      orderStatus={item.orderStatus ?? ""}
+    />
+  );
 
   return (
     <AppSaveView>
-      <FlatList
-        data={orderList}
-        keyExtractor={(item) => item.trackingId}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.container}
-      />
+      {loading && orderList.length === 0 ? (
+        <View style={styles.center}>
+          <ActivityIndicator size="large" />
+          <AppText>Loading orders...</AppText>
+        </View>
+      ) : error && orderList.length === 0 ? (
+        <View style={styles.center}>
+          <AppText>{error}</AppText>
+        </View>
+      ) : (
+        <FlatList
+          data={orderList}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.container}
+          ListEmptyComponent={
+            <View style={styles.center}>
+              <AppText>No orders found.</AppText>
+            </View>
+          }
+        />
+      )}
     </AppSaveView>
   );
 };
@@ -137,5 +124,13 @@ export default OrderScreen;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: sharedHorizontalPadding,
+    flexGrow: 1,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    gap: 10,
   },
 });

@@ -1,17 +1,33 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppText from "../components/text/AppText";
 import { vs } from "react-native-size-matters";
 import { s } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileDetails = () => {
   var url =
     "https://images.unsplash.com/photo-1669269628135-21636aefa17d?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
-  const { userData } = useSelector((state: RootState) => state.userSlice);
-  const dispatch = useDispatch();
+  // this is to get the stored user
+  const [data, setData] = useState();
+  useEffect(() => {
+    const getData = async () => {
+      const data = await AsyncStorage.getItem("USER_DATA");
+      if (data != null) {
+        const user = data ? JSON.parse(data) : [];
+        setData(user);
+      } else {
+      }
+    };
+
+    getData();
+  }, []);
+
+  // const { userData } = useSelector((state: RootState) => state.userSlice);
+  // const dispatch = useDispatch();
 
   return (
     <View style={styles.container}>
@@ -34,7 +50,7 @@ const ProfileDetails = () => {
         Bennet Joyce
       </AppText>
       <AppText style={{ fontSize: s(12) }} variant="medium">
-        {userData?.email}
+        {data?.email}
       </AppText>
     </View>
   );

@@ -11,10 +11,18 @@ import { SheetManager } from "react-native-actions-sheet";
 import LanguageBottomSheet from "../components/language/LanguageBottomSheet";
 import { useTranslation } from "react-i18next";
 import AppText from "../components/text/AppText";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const { t } = useTranslation();
+
+  const handleLogout = async (link: string) => {
+    try {
+      await AsyncStorage.removeItem("USER_DATA");
+      navigation.navigate(link);
+    } catch (e) {}
+  };
   return (
     <AppSaveView>
       <ProfileDetails />
@@ -28,7 +36,10 @@ const ProfileScreen = () => {
           title={t("profileLanguage")}
           onPress={() => SheetManager.show("LANG_SHEET")}
         />
-        <ProfileSectionButton title={t("profileLogout")} />
+        <ProfileSectionButton
+          title={t("profileLogout")}
+          onPress={() => handleLogout("AuthStack")}
+        />
       </View>
       <LanguageBottomSheet />
     </AppSaveView>

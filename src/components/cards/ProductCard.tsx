@@ -11,6 +11,7 @@ interface productCardProps {
   title: string;
   imageURL: string;
   onPress: () => void;
+  onAddToCart?: () => void;
 }
 
 const ProductCard: React.FC<productCardProps> = ({
@@ -18,15 +19,22 @@ const ProductCard: React.FC<productCardProps> = ({
   title,
   imageURL,
   onPress,
+  onAddToCart,
 }) => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={onPress}
-        style={styles.addToCartButtonContainer}
-      >
-        <Ionicons name="cart" size={s(15)} color={AppColors.white} />
-      </TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={onPress}
+      style={styles.container}
+    >
+      {onAddToCart && (
+        <TouchableOpacity
+          onPress={onAddToCart}
+          style={styles.addToCartButtonContainer}
+        >
+          <Ionicons name="cart" size={s(15)} color={AppColors.white} />
+        </TouchableOpacity>
+      )}
       <View style={styles.imageContainer}>
         {/* image Ui section  */}
         <Image
@@ -51,7 +59,7 @@ const ProductCard: React.FC<productCardProps> = ({
           </AppText>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

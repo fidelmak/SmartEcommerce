@@ -1,25 +1,48 @@
 {
   "expo": {
-    "name": "SmartEcommerce",
+    "name": "Elegads Store",
     "slug": "SmartEcommerce",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/elogo.jpg",
     "userInterfaceStyle": "light",
+    
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.creativdev.smartecommerce"
     },
     "android": {
+      "package": "com.creativdev.smartecommerce",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
+        "foregroundImage": "./assets/elogo.jpg",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/elogo.jpg"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./assets/appsplash.png",
+          "dark": {
+            "image": "./assets/appsplashdark.png",
+            "backgroundColor": "#000000"
+          },
+          "imageWidth": 200
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "fb3e678a-8bbc-43ef-ab6d-ba53004a2f72"
+      }
+    },
+    "owner": "bigfidelis"
   }
 }

@@ -26,7 +26,13 @@ const LanguageBottomSheet = () => {
   };
 
   return (
-    <ActionSheet id="LANG_SHEET" ref={sheetRef}>
+    <ActionSheet
+      id="LANG_SHEET"
+      ref={sheetRef}
+      onBeforeShow={() =>
+        setSelectLanguage(i18n.language?.split("-")[0] ?? "en")
+      }
+    >
       <View style={styles.container}>
         <AppText style={styles.title}>{t("changeLanguageTitle")}</AppText>
 

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppSaveView from "../../components/saveView/AppSaveView";
 import { s, vs } from "react-native-size-matters";
 import { AppColors } from "../../styles/AppColors";
@@ -19,13 +19,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { addDoc, collection, doc } from "firebase/firestore";
-import { db } from "../../config/firebase";
+
 import showMess from "../../components/notification/ShowMessage";
 import { useNavigation } from "@react-navigation/native";
 import { emptyCart, removeTotalItem } from "../../store/reducer/cartSlice";
 import EmptyCart from "./EmptyCart";
 import { useTranslation } from "react-i18next";
 import i18n from "../../localization/i18n";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { db } from "../../config/firebase";
 
 const schema = yup
   .object({
@@ -63,6 +65,20 @@ const CheckoutScreen = () => {
 
   const navigation = useNavigation();
 
+  const [userLocalData, setUserLocalData] = useState();
+  useEffect(() => {
+    const getData = async () => {
+      const data = await AsyncStorage.getItem("USER_DATA");
+      if (data != null) {
+        const user = data ? JSON.parse(data) : [];
+        setUserLocalData(user);
+      } else {
+      }
+    };
+
+    getData();
+  }, []);
+
   const saveOrder = async (formData: FormData) => {
     try {
       const data = {
@@ -72,7 +88,14 @@ const CheckoutScreen = () => {
         orderTotal,
         createdAt: new Date().toISOString(),
       };
-      const userOrderRef = collection(doc(db, "users", userData.uid), "orders");
+
+      // this to get user data
+
+      const userOrderRef = collection(
+        doc(db, "users", userLocalData?.uid),
+        "orders",
+      );
+
       await addDoc(userOrderRef, data);
       const orderRef = collection(db, "orders");
       await addDoc(orderRef, data);
