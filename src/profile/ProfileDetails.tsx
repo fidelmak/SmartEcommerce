@@ -9,7 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileDetails = () => {
   var url =
-    "https://images.unsplash.com/photo-1669269628135-21636aefa17d?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+    "https://images.unsplash.com/photo-1618979251882-0b40ef3617f0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D";
 
   // this is to get the stored user
   const [data, setData] = useState();
@@ -47,7 +47,7 @@ const ProfileDetails = () => {
         />
       </View>
       <AppText variant="bold" style={{ fontSize: s(16), marginTop: s(10) }}>
-        Bennet Joyce
+        Welcome
       </AppText>
       <AppText style={{ fontSize: s(12) }} variant="medium">
         {data?.email}
