@@ -26,9 +26,6 @@ const ProfileDetails = () => {
     getData();
   }, []);
 
-  // const { userData } = useSelector((state: RootState) => state.userSlice);
-  // const dispatch = useDispatch();
-
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
