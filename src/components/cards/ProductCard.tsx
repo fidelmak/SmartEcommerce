@@ -55,7 +55,7 @@ const ProductCard: React.FC<productCardProps> = ({
               fontSize: 24,
             }}
           >
-            £{price}
+            ${price}
           </AppText>
         </View>
       </View>

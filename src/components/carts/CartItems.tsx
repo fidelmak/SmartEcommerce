@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     borderColor: AppColors.lightGrey,
     borderRadius: s(12),
     width: "50%",
+
     justifyContent: "space-around",
     flexDirection: "row",
     padding: s(2),
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     width: "100%",
-    height: 100,
+
     borderBottomWidth: s(3),
     paddingBottom: vs(2),
     borderColor: AppColors.lightGrey,

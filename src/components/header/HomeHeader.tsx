@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: sharedHorizontalPadding * 1.2,
     marginBottom: s(12),
+    marginTop: vs(20),
   },
   logo: {
     height: vs(24),
